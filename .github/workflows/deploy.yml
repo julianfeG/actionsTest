@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+  ECR_REPOSITORY: mi-ecr
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,23 +28,23 @@ jobs:
       - name: Ensure ECR repo exists
         run: |
           aws ecr describe-repositories \
-            --repository-names mi-servicio \
+            --repository-names $ECR_REPOSITORY \
             --region ${{ secrets.AWS_REGION }} \
           || aws ecr create-repository \
-            --repository-name mi-servicio \
+            --repository-name $ECR_REPOSITORY \
             --region ${{ secrets.AWS_REGION }}
 
 
       - name: Build image
         run: |
-          docker build -t mi-servicio .
+          docker build -t $ECR_REPOSITORY .
 
       - name: Tag image
         run: |
-          docker tag mi-servicio:latest \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mi-servicio:latest
+          docker tag $ECR_REPOSITORY:latest \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
 
       - name: Push image
         run: |
           docker push \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mi-servicio:latest
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$ECR_REPOSITORY:latest
