@@ -24,14 +24,14 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t ecs-test .
+          docker build -t mi-servicio .
 
       - name: Tag image
         run: |
-          docker tag ecs-test:latest \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecs-test:latest
+          docker tag mi-servicio:latest \
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mi-servicio:latest
 
       - name: Push image
         run: |
           docker push \
-          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/ecs-test:latest
+          ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mi-servicio:latest
